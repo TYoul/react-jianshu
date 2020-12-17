@@ -27,7 +27,7 @@ import {
 
 class Header extends PureComponent {
   render() {
-    const { focused, handleInputFocus, handleInputBlur } = this.props;
+    const { focused, handleInputFocus, handleInputBlur, list } = this.props;
     return (
       <HeaderWrapper>
         <Logo />
@@ -42,11 +42,11 @@ class Header extends PureComponent {
             <CSSTransition timeout={200} in={focused} classNames="slide">
               <NavSearch
                 className={focused ? 'focused' : ''}
-                onFocus={(e) => handleInputFocus()}
+                onFocus={(e) => handleInputFocus(list)}
                 onBlur={(e) => handleInputBlur()}
               ></NavSearch>
             </CSSTransition>
-            <i className={focused ? 'focused iconfont' : 'iconfont'}>
+            <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
               &#xe614;
             </i>
             {this.getListArea()}
@@ -68,16 +68,19 @@ class Header extends PureComponent {
       mouseIn,
       list,
       page,
+      totalPage,
       handleMouseEnter,
       handleMouseLeave,
       handleChangePage,
     } = this.props;
     const newList = list.toJS();
     let pageList = [];
-    for (let i = (page - 1) * 10; i < page * 10; i++) {
-      pageList.push(
-        <SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>
-      );
+    if (newList.length) {
+      for (let i = (page - 1) * 10; i < page * 10; i++) {
+        pageList.push(
+          <SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>
+        );
+      }
     }
     if (focused || mouseIn) {
       return (
@@ -87,7 +90,17 @@ class Header extends PureComponent {
         >
           <SearchInfoTitle>
             热门搜索
-            <SearchInfoSwitch onClick={(e) => handleChangePage(page)}>
+            <SearchInfoSwitch
+              onClick={(e) => handleChangePage(page, totalPage, this.spinIcon)}
+            >
+              <i
+                ref={(icon) => {
+                  this.spinIcon = icon;
+                }}
+                className="iconfont spin"
+              >
+                &#xe851;
+              </i>
               换一批
             </SearchInfoSwitch>
           </SearchInfoTitle>
@@ -103,32 +116,37 @@ const mapStateToProps = (state) => {
     focused: state.getIn(['header', 'focused']),
     list: state.getIn(['header', 'list']),
     page: state.getIn(['header', 'page']),
+    totalPage: state.getIn(['header', 'totalPage']),
     mouseIn: state.getIn(['header', 'mouseIn']),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleInputFocus() {
-      dispatch(getList());
-      const action = inputFocusAction();
-      dispatch(action);
+    handleInputFocus(list) {
+      // ajax请求优化，避免多次ajax请求。
+      list.size === 0 && dispatch(getList());
+      dispatch(inputFocusAction());
     },
     handleInputBlur() {
-      const action = inputBlurAction();
-      dispatch(action);
+      dispatch(inputBlurAction());
     },
     handleMouseEnter() {
-      const action = mouseEnterAction();
-      dispatch(action);
+      dispatch(mouseEnterAction());
     },
     handleMouseLeave() {
-      const action = mouseLeaveAction();
-      dispatch(action);
+      dispatch(mouseLeaveAction());
     },
-    handleChangePage(page) {
-      const action = changePageAction(page);
-      dispatch(action);
+    handleChangePage(page, totalPage, spin) {
+      let originAngle = spin.style.transform.replace(/[^0-9]/gi, '');
+      if (originAngle) {
+        originAngle = parseInt(originAngle, 10);
+      } else {
+        originAngle = 0;
+      }
+      spin.style.transform = `rotate(${originAngle + 360}deg)`;
+      page < totalPage ? (page = page + 1) : (page = 1);
+      dispatch(changePageAction(page));
     },
   };
 };

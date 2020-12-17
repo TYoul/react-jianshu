@@ -22,10 +22,12 @@ function reducer(state=defaultStore, action){
     case MOUSE_LEAVE:
       return state.set('mouseIn',false)
     case CHANGE_PAGE:
-      if(action.page < state.toJS().totalPage) return state.set('page',action.page + 1)
-      return state.set('page',1)
+      return state.set('page',action.page)
     case CHANGE_LIST:
-      return state.set('list',action.value).set('totalPage',action.totalPage)
+      return state.merge({
+        list: action.value,
+        totalPage: action.totalPage
+      })
     default:
       return state
   }
