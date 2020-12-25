@@ -9,6 +9,7 @@ import {
   changePageAction,
   getList,
 } from './store/actionCreators';
+import { loginOutAction } from '../../pages/login/store/actionCreators';
 import { CSSTransition } from 'react-transition-group';
 import {
   HeaderWrapper,
@@ -28,7 +29,14 @@ import {
 
 class Header extends PureComponent {
   render() {
-    const { focused, handleInputFocus, handleInputBlur, list } = this.props;
+    const {
+      focused,
+      handleInputFocus,
+      handleInputBlur,
+      list,
+      isLogin,
+      loginOut,
+    } = this.props;
     return (
       <HeaderWrapper>
         <Link to="/">
@@ -37,7 +45,16 @@ class Header extends PureComponent {
         <Nav>
           <NavItem className="left active">首页</NavItem>
           <NavItem className="left">下载App</NavItem>
-          <NavItem className="right">登录</NavItem>
+          {isLogin ? (
+            <NavItem className="right" onClick={e => loginOut()}>
+              退出
+            </NavItem>
+          ) : (
+            <Link to="/login">
+              <NavItem className="right">登录</NavItem>
+            </Link>
+          )}
+
           <NavItem className="right">
             <i className="iconfont">&#xe636;</i>
           </NavItem>
@@ -45,8 +62,8 @@ class Header extends PureComponent {
             <CSSTransition timeout={200} in={focused} classNames="slide">
               <NavSearch
                 className={focused ? 'focused' : ''}
-                onFocus={(e) => handleInputFocus(list)}
-                onBlur={(e) => handleInputBlur()}
+                onFocus={e => handleInputFocus(list)}
+                onBlur={e => handleInputBlur()}
               ></NavSearch>
             </CSSTransition>
             <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
@@ -56,9 +73,11 @@ class Header extends PureComponent {
           </SearchWrapper>
         </Nav>
         <Addition>
-          <Button className="writting">
-            <i className="iconfont">&#xe615;</i>写文章
-          </Button>
+          <Link to="/write">
+            <Button className="writting">
+              <i className="iconfont">&#xe615;</i>写文章
+            </Button>
+          </Link>
           <Button className="reg">注册</Button>
         </Addition>
       </HeaderWrapper>
@@ -88,16 +107,16 @@ class Header extends PureComponent {
     if (focused || mouseIn) {
       return (
         <SearchInfo
-          onMouseEnter={(e) => handleMouseEnter()}
-          onMouseLeave={(e) => handleMouseLeave()}
+          onMouseEnter={e => handleMouseEnter()}
+          onMouseLeave={e => handleMouseLeave()}
         >
           <SearchInfoTitle>
             热门搜索
             <SearchInfoSwitch
-              onClick={(e) => handleChangePage(page, totalPage, this.spinIcon)}
+              onClick={e => handleChangePage(page, totalPage, this.spinIcon)}
             >
               <i
-                ref={(icon) => {
+                ref={icon => {
                   this.spinIcon = icon;
                 }}
                 className="iconfont spin"
@@ -114,17 +133,18 @@ class Header extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     focused: state.getIn(['header', 'focused']),
     list: state.getIn(['header', 'list']),
     page: state.getIn(['header', 'page']),
     totalPage: state.getIn(['header', 'totalPage']),
     mouseIn: state.getIn(['header', 'mouseIn']),
+    isLogin: state.getIn(['login', 'isLogin']),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     handleInputFocus(list) {
       // ajax请求优化，避免多次ajax请求。
@@ -150,6 +170,9 @@ const mapDispatchToProps = (dispatch) => {
       spin.style.transform = `rotate(${originAngle + 360}deg)`;
       page < totalPage ? (page = page + 1) : (page = 1);
       dispatch(changePageAction(page));
+    },
+    loginOut() {
+      dispatch(loginOutAction());
     },
   };
 };

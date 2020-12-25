@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import logoPic from '../../static/logo.png'
+import logoPic from '../../static/logo.png';
 
 export const HeaderWrapper = styled.div`
+  z-index: 1;
   position: relative;
   height: 56px;
   border-bottom: 1px solid #ffffff;
-`
+`;
 
 export const Logo = styled.div`
   position: absolute;
@@ -16,7 +17,7 @@ export const Logo = styled.div`
   height: 56px;
   background: url(${logoPic});
   background-size: contain;
-`
+`;
 
 export const Nav = styled.div`
   width: 960px;
@@ -24,29 +25,29 @@ export const Nav = styled.div`
   padding-right: 70px;
   box-sizing: border-box;
   margin: 0 auto;
-`
+`;
 
 export const NavItem = styled.div`
   line-height: 56px;
   padding: 0 15px;
   font-size: 17px;
   color: #333;
-  &.left{
+  &.left {
     float: left;
   }
-  &.right{
+  &.right {
     float: right;
     color: #969696;
   }
-  &.active{
+  &.active {
     color: #ea6f5a;
   }
-`
+`;
 
 export const SearchWrapper = styled.div`
   position: relative;
   float: left;
-  .zoom{
+  .zoom {
     position: absolute;
     right: 5px;
     bottom: 5px;
@@ -61,10 +62,10 @@ export const SearchWrapper = styled.div`
       color: #fff;
     }
   }
-`
+`;
 
 export const NavSearch = styled.input.attrs({
-  placeholder: '搜索'
+  placeholder: '搜索',
 })`
   width: 160px;
   height: 38px;
@@ -77,25 +78,25 @@ export const NavSearch = styled.input.attrs({
   background: #eee;
   font-size: 14px;
   color: #666;
-  &::placeholder{
+  &::placeholder {
     color: #999;
   }
-  &.focused{
+  &.focused {
     width: 240px;
   }
-  &.slide-enter{
-    transition: all .2s ease-out;
+  &.slide-enter {
+    transition: all 0.2s ease-out;
   }
-  &.slide-enter-active{
+  &.slide-enter-active {
     width: 240px;
   }
-  &.slide-exit{
-    transition: all .2s ease-out;
+  &.slide-exit {
+    transition: all 0.2s ease-out;
   }
-  &.slide-exit-active{
+  &.slide-exit-active {
     width: 160px;
   }
-`
+`;
 
 export const SearchInfo = styled.div`
   position: absolute;
@@ -103,9 +104,9 @@ export const SearchInfo = styled.div`
   top: 56px;
   width: 240px;
   padding: 0 20px;
-  box-shadow: 0 0 8px rgba(0,0,0,.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   background: #fff;
-`
+`;
 
 export const SearchInfoTitle = styled.div`
   margin-top: 20px;
@@ -113,25 +114,25 @@ export const SearchInfoTitle = styled.div`
   line-height: 20px;
   font-size: 14px;
   color: #969696;
-`
+`;
 
 export const SearchInfoSwitch = styled.span`
   cursor: pointer;
   float: right;
   font-size: 13px;
-  .spin{
+  .spin {
     display: block;
     float: left;
     font-size: 12px;
-    margin-right:2px;
-    transition: all .2s ease-in;
+    margin-right: 2px;
+    transition: all 0.2s ease-in;
     transform-origin: center center;
   }
-`
+`;
 
 export const SearchInfoList = styled.div`
   overflow: hidden;
-`
+`;
 
 export const SearchInfoItem = styled.a`
   display: block;
@@ -144,14 +145,14 @@ export const SearchInfoItem = styled.a`
   border: 1px solid #ddd;
   color: #787878;
   border-radius: 3px;
-`
+`;
 
 export const Addition = styled.div`
   position: absolute;
   right: 0;
   top: 0;
   height: 56px;
-`
+`;
 
 export const Button = styled.div`
   float: right;
@@ -162,12 +163,12 @@ export const Button = styled.div`
   border-radius: 19px;
   border: solid 1px #ec6149;
 
-  &.writting{
+  &.writting {
     color: #fff;
     background: #ec6149;
   }
 
-  &.reg{
+  &.reg {
     color: #ec6149;
   }
-`
+`;

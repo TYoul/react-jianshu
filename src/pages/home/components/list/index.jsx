@@ -12,7 +12,7 @@ class List extends PureComponent {
       <>
         {newArticleList.map((item, index) => {
           return (
-            <Link to="/detail" key={index}>
+            <Link key={index} to={'/detail/' + item.id}>
               <ListItem>
                 <img className="pic" src={item.imgUrl} alt="" />
                 <ListInfo>
@@ -23,18 +23,18 @@ class List extends PureComponent {
             </Link>
           );
         })}
-        <LoadMore onClick={(e) => getMoreList(articlePage)}>加载更多</LoadMore>
+        <LoadMore onClick={e => getMoreList(articlePage)}>加载更多</LoadMore>
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   articleList: state.getIn(['home', 'articleList']),
   articlePage: state.getIn(['home', 'articlePage']),
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   getMoreList(articlePage) {
     const action = getMoreList(articlePage);
     dispatch(action);
